@@ -11,11 +11,14 @@ export class ProductTypeService {
   ) {}
 
   async getAllProductType() {
-    return await this.productRepository.find();
+    return await this.productRepository.find({ relations: ['receives'] });
   }
 
   async getOneProductType(id: string) {
-    return this.productRepository.findOne({ where: { id } });
+    return this.productRepository.findOne({
+      where: { id },
+      relations: ['receives'],
+    });
   }
 
   async createProductType(body: ProductDto) {

@@ -15,6 +15,7 @@ import { LoggingInterceptor } from './shared/logging.interceptor';
 import { ProductTypeModule } from './app/product_type/product_type.module';
 import { SupplierModule } from './app/supplier/supplier.module';
 import { ClientModule } from './app/client/client.module';
+import { ReceiveModule } from './app/receive/receive.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,6 +40,7 @@ import { ClientModule } from './app/client/client.module';
     ProductTypeModule,
     SupplierModule,
     ClientModule,
+    ReceiveModule,
   ],
 
   providers: [

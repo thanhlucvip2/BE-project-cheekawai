@@ -4,7 +4,9 @@ import {
   Column,
   UpdateDateColumn,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { ReceiveEntity } from '../receive/receive.entity';
 
 @Entity()
 export class SupplierEntity {
@@ -31,4 +33,7 @@ export class SupplierEntity {
 
   @Column({ type: 'text', nullable: true })
   note: string;
+
+  @OneToMany((type) => ReceiveEntity, (receive) => receive.supplier)
+  receives: ReceiveEntity[];
 }

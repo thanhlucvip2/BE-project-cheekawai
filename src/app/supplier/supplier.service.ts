@@ -12,11 +12,14 @@ export class SupplierService {
   ) {}
 
   async getAllSupplier() {
-    return await this.supplierRepository.find();
+    return await this.supplierRepository.find({ relations: ['receives'] });
   }
 
   async getOneSupplier(id: string) {
-    return this.supplierRepository.findOne({ where: { id } });
+    return this.supplierRepository.findOne({
+      where: { id },
+      relations: ['receives'],
+    });
   }
 
   async createSupplier(body: SupplierDto) {
