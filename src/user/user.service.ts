@@ -36,7 +36,13 @@ export class UserService {
   }
 
   async register(data: UserDto) {
-    const { username } = data;
+    const { username, password } = data;
+    if (!username || !password) {
+      throw new HttpException(
+        'Vui lòng điền đủ username password!',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     let user = await this.userRepository.findOne({ where: { username } });
     // check user đã tồn tại chưa
     if (user) {
