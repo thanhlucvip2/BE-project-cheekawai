@@ -7,10 +7,12 @@ import {
   Param,
   Body,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { ProductTypeService } from './product_type.service';
 import { ProductDto } from './product.dto';
 import { AuthGuard } from 'src/shared/auth.guard';
+import { ValidationPipe } from 'src/shared/validation.pipe';
 @Controller('api/product-type')
 export class ProductTypeController {
   constructor(private readonly productTypeService: ProductTypeService) {}
@@ -35,12 +37,14 @@ export class ProductTypeController {
 
   @Put(':id')
   @UseGuards(new AuthGuard()) // check token
+  @UsePipes(new ValidationPipe())
   async updateProductType(@Body() body: ProductDto, @Param('id') id: string) {
     return await this.productTypeService.updateProductType(id, body);
   }
 
   @Delete(':id')
   @UseGuards(new AuthGuard()) // check token
+  @UsePipes(new ValidationPipe())
   async deleteProductType(@Param('id') id: string) {
     return await this.productTypeService.deleteProductType(id);
   }

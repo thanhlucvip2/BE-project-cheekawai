@@ -36,7 +36,7 @@ export class ProductTypeService {
 
   async updateProductType(id: string, body: ProductDto) {
     const checkId = await this.productRepository.findOne({ where: { id } });
-    // check user đã tồn tại chưa
+    // check mã hàng đã tồn tại chưa
     if (!checkId) {
       throw new HttpException(
         'Mã hàng không tồn tại trong hệ thống',
