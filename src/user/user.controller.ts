@@ -10,7 +10,7 @@ import { UserDto } from './user.dto';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/shared/auth.guard';
 import { ValidationPipe } from 'src/shared/validation.pipe';
-@Controller('user')
+@Controller('api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

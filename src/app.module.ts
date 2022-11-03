@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpErrorFilter } from './shared/http-error.filter';
@@ -14,7 +12,7 @@ import {
 } from './@config/constants';
 import { UserModule } from './user/user.module';
 import { LoggingInterceptor } from './shared/logging.interceptor';
-
+import { ProductTypeModule } from './app/product_type/product_type.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -36,10 +34,10 @@ import { LoggingInterceptor } from './shared/logging.interceptor';
       inject: [ConfigService],
     }),
     UserModule,
+    ProductTypeModule,
   ],
-  controllers: [AppController],
+
   providers: [
-    AppService,
     {
       provide: APP_FILTER,
       useClass: HttpErrorFilter, // import httpError vào module
