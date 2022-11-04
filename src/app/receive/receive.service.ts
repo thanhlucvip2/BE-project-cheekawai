@@ -6,6 +6,8 @@ import { SupplierEntity } from '../../@entity/supplier.entity';
 import { ReceiveHistoryEntity } from '../../@entity/receive-history.entity';
 import { ReceiveDto } from '../../dto/receive.dto';
 import { ReceiveEntity } from '../../@entity/receive.entity';
+import { adddate, convertDateTimeToDateString } from 'src/@helpers/sql.helper';
+import { PaginationDto } from 'src/dto/pagination.dto';
 
 @Injectable()
 export class ReceiveService {
@@ -18,14 +20,37 @@ export class ReceiveService {
     private readonly productRepository: Repository<ProductTypeEntity>,
     @InjectRepository(SupplierEntity)
     private readonly supplierRepository: Repository<SupplierEntity>,
+    private emBi: EntityManager,
   ) {}
 
-  async getAllReceive() {
-    const listReceive = await this.receiveRepository.find({
-      relations: ['product_type', 'supplier'],
-    });
+  async getAllReceive(pagination: PaginationDto) {
+    const {
+      fromDate = new Date(),
+      toDate = new Date(),
+      pageIndex = 0,
+      pageSize = 10,
+    } = pagination;
 
-    return listReceive;
+    const sqlFromDate = convertDateTimeToDateString(fromDate);
+    const sqlToDate = convertDateTimeToDateString(adddate(toDate, 1)); // tặng thêm 1 ngày cho date hiện tại
+
+    const queryBuilder = await this.emBi
+      .createQueryBuilder(ReceiveHistoryEntity, 'receive_history')
+      .leftJoinAndSelect('receive_history.product_type', 'product_type') // relation ship
+      .leftJoinAndSelect('receive_history.supplier', 'supplier') // relation ship
+      .andWhere('receive_history.created >= :sqlFromDate', { sqlFromDate })
+      .andWhere('receive_history.created <= :sqlToDate', { sqlToDate })
+      .limit(pageSize)
+      .offset(pageIndex);
+
+    const total = await queryBuilder.getCount();
+    const items = await queryBuilder.getMany();
+    return {
+      pageIndex,
+      pageSize,
+      total,
+      items,
+    };
   }
 
   async getOneReceive(id: string) {

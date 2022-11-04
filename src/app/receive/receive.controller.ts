@@ -6,20 +6,21 @@ import {
   Post,
   Body,
   UsePipes,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/@systems/auth.guard';
 import { ValidationPipe } from 'src/@systems/validation.pipe';
-import { ReceiveHistoryService } from './receive-history/receive-history.service';
 import { ReceiveDto } from '../../dto/receive.dto';
 import { ReceiveService } from './receive.service';
+import { PaginationDto } from 'src/dto/pagination.dto';
 
 @Controller('api/receive')
 export class ReceiveController {
   constructor(private readonly receiveService: ReceiveService) {}
   @Get()
   @UseGuards(new AuthGuard()) // check token
-  async getAllProductType() {
-    return await this.receiveService.getAllReceive();
+  async getAllProductType(@Query() pagination: PaginationDto) {
+    return await this.receiveService.getAllReceive(pagination);
   }
 
   @Get(':id')

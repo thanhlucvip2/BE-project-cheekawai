@@ -1,18 +1,45 @@
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { ClientDto } from '../../dto/client.dto';
 import { ClientEntity } from '../../@entity/client.entity';
+import { PaginationDto } from 'src/dto/pagination.dto';
+import { adddate, convertDateTimeToDateString } from 'src/@helpers/sql.helper';
 
 @Injectable()
 export class ClientService {
   constructor(
     @InjectRepository(ClientEntity)
     private readonly clientRepository: Repository<ClientEntity>,
+    private emBi: EntityManager,
   ) {}
 
-  async getAllClient() {
-    return await this.clientRepository.find();
+  async getAllClient(pagination: PaginationDto) {
+    const {
+      fromDate = new Date(),
+      toDate = new Date(),
+      pageIndex = 0,
+      pageSize = 10,
+    } = pagination;
+
+    const sqlFromDate = convertDateTimeToDateString(fromDate);
+    const sqlToDate = convertDateTimeToDateString(adddate(toDate, 1)); // tặng thêm 1 ngày cho date hiện tại
+
+    const queryBuilder = await this.emBi
+      .createQueryBuilder(ClientEntity, 'client')
+      .andWhere('client.created >= :sqlFromDate', { sqlFromDate })
+      .andWhere('client.created <= :sqlToDate', { sqlToDate })
+      .limit(pageSize)
+      .offset(pageIndex);
+
+    const total = await queryBuilder.getCount();
+    const items = await queryBuilder.getMany();
+    return {
+      pageIndex,
+      pageSize,
+      total,
+      items,
+    };
   }
 
   async getOneClient(id: string) {

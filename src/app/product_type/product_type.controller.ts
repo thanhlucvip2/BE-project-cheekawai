@@ -8,19 +8,21 @@ import {
   Body,
   UseGuards,
   UsePipes,
+  Query,
 } from '@nestjs/common';
 import { ProductTypeService } from './product_type.service';
 import { ProductDto } from '../../dto/product.dto';
 import { AuthGuard } from 'src/@systems/auth.guard';
 import { ValidationPipe } from 'src/@systems/validation.pipe';
+import { PaginationDto } from 'src/dto/pagination.dto';
 @Controller('api/product-type')
 export class ProductTypeController {
   constructor(private readonly productTypeService: ProductTypeService) {}
 
   @Get()
   @UseGuards(new AuthGuard()) // check token
-  async getAllProductType() {
-    return await this.productTypeService.getAllProductType();
+  async getAllProductType(@Query() pagination: PaginationDto) {
+    return await this.productTypeService.getAllProductType(pagination);
   }
 
   @Get(':id')

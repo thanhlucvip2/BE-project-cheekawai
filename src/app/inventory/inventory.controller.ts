@@ -1,12 +1,13 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { PaginationDto } from 'src/dto/pagination.dto';
 import { InventoryService } from './inventory.service';
 
-@Controller('inventory')
+@Controller('api/inventory')
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
   @Get()
-  async getAllInventory() {
-    return await this.inventoryService.getAllInventory();
+  async getAllInventory(@Query() pagination: PaginationDto) {
+    return await this.inventoryService.getAllInventory(pagination);
   }
 
   @Get(':id')

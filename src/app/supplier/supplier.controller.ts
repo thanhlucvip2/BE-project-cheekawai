@@ -7,18 +7,20 @@ import {
   UseGuards,
   Param,
   Body,
+  Query,
 } from '@nestjs/common';
 import { SupplierService } from './supplier.service';
 import { AuthGuard } from 'src/@systems/auth.guard';
 import { SupplierDto } from './supplier.dto';
+import { PaginationDto } from 'src/dto/pagination.dto';
 @Controller('api/supplier')
 export class SupplierController {
   constructor(private readonly supplierService: SupplierService) {}
 
   @Get()
   @UseGuards(new AuthGuard()) // check token
-  async getAllProductType() {
-    return await this.supplierService.getAllSupplier();
+  async getAllProductType(@Query() pagination: PaginationDto) {
+    return await this.supplierService.getAllSupplier(pagination);
   }
 
   @Get(':id')

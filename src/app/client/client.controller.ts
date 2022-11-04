@@ -7,8 +7,10 @@ import {
   Body,
   Delete,
   Param,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/@systems/auth.guard';
+import { PaginationDto } from 'src/dto/pagination.dto';
 import { ClientDto } from '../../dto/client.dto';
 import { ClientService } from './client.service';
 
@@ -18,8 +20,8 @@ export class ClientController {
 
   @Get()
   @UseGuards(new AuthGuard()) // check token
-  async getAllProductType() {
-    return await this.clientService.getAllClient();
+  async getAllProductType(@Query() pagination: PaginationDto) {
+    return await this.clientService.getAllClient(pagination);
   }
 
   @Get(':id')

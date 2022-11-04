@@ -1,17 +1,45 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { ProductDto } from '../../dto/product.dto';
 import { ProductTypeEntity } from '../../@entity/product_type.entity';
+import { adddate, convertDateTimeToDateString } from 'src/@helpers/sql.helper';
+import { PaginationDto } from 'src/dto/pagination.dto';
 @Injectable()
 export class ProductTypeService {
   constructor(
     @InjectRepository(ProductTypeEntity)
     private readonly productRepository: Repository<ProductTypeEntity>,
+    private emBi: EntityManager,
   ) {}
 
-  async getAllProductType() {
-    return await this.productRepository.find({ relations: ['receives'] });
+  async getAllProductType(pagination: PaginationDto) {
+    const {
+      fromDate = new Date(),
+      toDate = new Date(),
+      pageIndex = 0,
+      pageSize = 10,
+    } = pagination;
+
+    const sqlFromDate = convertDateTimeToDateString(fromDate);
+    const sqlToDate = convertDateTimeToDateString(adddate(toDate, 1)); // tặng thêm 1 ngày cho date hiện tại
+
+    const queryBuilder = await this.emBi
+      .createQueryBuilder(ProductTypeEntity, 'product')
+      .leftJoinAndSelect('product.receives', 'receives') // relation ship
+      .andWhere('product.created >= :sqlFromDate', { sqlFromDate })
+      .andWhere('product.created <= :sqlToDate', { sqlToDate })
+      .limit(pageSize)
+      .offset(pageIndex);
+
+    const total = await queryBuilder.getCount();
+    const items = await queryBuilder.getMany();
+    return {
+      pageIndex,
+      pageSize,
+      total,
+      items,
+    };
   }
 
   async getOneProductType(id: string) {
