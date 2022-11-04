@@ -1,11 +1,11 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityManager } from 'typeorm';
-import { ProductTypeEntity } from '../product_type/product_type.entity';
-import { SupplierEntity } from '../supplier/supplier.entity';
-import { ReceiveHistoryEntity } from './receive-history/receive-history.entity';
-import { ReceiveDto } from './receive.dto';
-import { ReceiveEntity } from './receive.entity';
+import { ProductTypeEntity } from '../../@entity/product_type.entity';
+import { SupplierEntity } from '../../@entity/supplier.entity';
+import { ReceiveHistoryEntity } from '../../@entity/receive-history.entity';
+import { ReceiveDto } from '../../dto/receive.dto';
+import { ReceiveEntity } from '../../@entity/receive.entity';
 
 @Injectable()
 export class ReceiveService {

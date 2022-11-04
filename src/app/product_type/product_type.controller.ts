@@ -10,9 +10,9 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { ProductTypeService } from './product_type.service';
-import { ProductDto } from './product.dto';
-import { AuthGuard } from 'src/shared/auth.guard';
-import { ValidationPipe } from 'src/shared/validation.pipe';
+import { ProductDto } from '../../dto/product.dto';
+import { AuthGuard } from 'src/@systems/auth.guard';
+import { ValidationPipe } from 'src/@systems/validation.pipe';
 @Controller('api/product-type')
 export class ProductTypeController {
   constructor(private readonly productTypeService: ProductTypeService) {}

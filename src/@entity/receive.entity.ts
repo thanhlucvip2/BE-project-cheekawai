@@ -6,8 +6,8 @@ import {
   CreateDateColumn,
   ManyToOne,
 } from 'typeorm';
-import { ProductTypeEntity } from '../product_type/product_type.entity';
-import { SupplierEntity } from '../supplier/supplier.entity';
+import { ProductTypeEntity } from './product_type.entity';
+import { SupplierEntity } from './supplier.entity';
 
 @Entity()
 export class ReceiveEntity {

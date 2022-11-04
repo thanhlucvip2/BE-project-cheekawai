@@ -8,8 +8,8 @@ import {
   Delete,
   Param,
 } from '@nestjs/common';
-import { AuthGuard } from 'src/shared/auth.guard';
-import { ClientDto } from './client.dto';
+import { AuthGuard } from 'src/@systems/auth.guard';
+import { ClientDto } from '../../dto/client.dto';
 import { ClientService } from './client.service';
 
 @Controller('api/client')

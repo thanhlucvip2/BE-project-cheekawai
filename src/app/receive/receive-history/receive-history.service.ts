@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ReceiveHistoryEntity } from './receive-history.entity';
-import { ReceiveHistoryDto } from './receive-history.dto';
-
+import { ReceiveHistoryEntity } from '../../../@entity/receive-history.entity';
 @Injectable()
 export class ReceiveHistoryService {
   constructor(

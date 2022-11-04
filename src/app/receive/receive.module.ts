@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProductTypeEntity } from '../product_type/product_type.entity';
-import { SupplierEntity } from '../supplier/supplier.entity';
+import { ProductTypeEntity } from '../../@entity/product_type.entity';
+import { SupplierEntity } from '../../@entity/supplier.entity';
 import { ReceiveController } from './receive.controller';
-import { ReceiveEntity } from './receive.entity';
+import { ReceiveEntity } from '../../@entity/receive.entity';
 import { ReceiveService } from './receive.service';
 import { ReceiveHistoryModule } from './receive-history/receive-history.module';
-import { ReceiveHistoryEntity } from './receive-history/receive-history.entity';
+import { ReceiveHistoryEntity } from '../../@entity/receive-history.entity';
 
 @Module({
   imports: [

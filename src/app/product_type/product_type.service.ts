@@ -1,8 +1,8 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProductDto } from './product.dto';
-import { ProductTypeEntity } from './product_type.entity';
+import { ProductDto } from '../../dto/product.dto';
+import { ProductTypeEntity } from '../../@entity/product_type.entity';
 @Injectable()
 export class ProductTypeService {
   constructor(

@@ -9,7 +9,7 @@ import {
   Body,
 } from '@nestjs/common';
 import { SupplierService } from './supplier.service';
-import { AuthGuard } from 'src/shared/auth.guard';
+import { AuthGuard } from 'src/@systems/auth.guard';
 import { SupplierDto } from './supplier.dto';
 @Controller('api/supplier')
 export class SupplierController {

@@ -1,8 +1,8 @@
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ClientDto } from './client.dto';
-import { ClientEntity } from './client.entity';
+import { ClientDto } from '../../dto/client.dto';
+import { ClientEntity } from '../../@entity/client.entity';
 
 @Injectable()
 export class ClientService {

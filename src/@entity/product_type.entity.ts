@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { ReceiveEntity } from '../receive/receive.entity';
+import { ReceiveEntity } from './receive.entity';
 
 @Entity()
 export class ProductTypeEntity {

@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SupplierDto } from './supplier.dto';
-import { SupplierEntity } from './supplier.entity';
+import { SupplierEntity } from '../../@entity/supplier.entity';
 
 @Injectable()
 export class SupplierService {

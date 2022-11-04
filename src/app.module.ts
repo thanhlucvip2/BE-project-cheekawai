@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HttpErrorFilter } from './shared/http-error.filter';
+import { HttpErrorFilter } from './@systems/http-error.filter';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import {
   DB_HOST,
@@ -11,11 +11,12 @@ import {
   DB_NAME,
 } from './@config/constants';
 import { UserModule } from './user/user.module';
-import { LoggingInterceptor } from './shared/logging.interceptor';
+import { LoggingInterceptor } from './@systems/logging.interceptor';
 import { ProductTypeModule } from './app/product_type/product_type.module';
 import { SupplierModule } from './app/supplier/supplier.module';
 import { ClientModule } from './app/client/client.module';
 import { ReceiveModule } from './app/receive/receive.module';
+import { InventoryModule } from './app/inventory/inventory.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -41,6 +42,7 @@ import { ReceiveModule } from './app/receive/receive.module';
     SupplierModule,
     ClientModule,
     ReceiveModule,
+    InventoryModule,
   ],
 
   providers: [

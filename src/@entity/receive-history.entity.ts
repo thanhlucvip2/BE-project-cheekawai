@@ -1,5 +1,5 @@
 import { Entity, CreateDateColumn } from 'typeorm';
-import { ReceiveEntity } from '../receive.entity';
+import { ReceiveEntity } from './receive.entity';
 
 @Entity()
 export class ReceiveHistoryEntity extends ReceiveEntity {

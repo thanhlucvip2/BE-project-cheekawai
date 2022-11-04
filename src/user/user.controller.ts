@@ -6,10 +6,10 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { UserDto } from './user.dto';
+import { UserDto } from '../dto/user.dto';
 import { UserService } from './user.service';
-import { AuthGuard } from 'src/shared/auth.guard';
-import { ValidationPipe } from 'src/shared/validation.pipe';
+import { AuthGuard } from 'src/@systems/auth.guard';
+import { ValidationPipe } from 'src/@systems/validation.pipe';
 @Controller('api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

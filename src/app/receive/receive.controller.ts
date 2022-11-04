@@ -7,10 +7,10 @@ import {
   Body,
   UsePipes,
 } from '@nestjs/common';
-import { AuthGuard } from 'src/shared/auth.guard';
-import { ValidationPipe } from 'src/shared/validation.pipe';
+import { AuthGuard } from 'src/@systems/auth.guard';
+import { ValidationPipe } from 'src/@systems/validation.pipe';
 import { ReceiveHistoryService } from './receive-history/receive-history.service';
-import { ReceiveDto } from './receive.dto';
+import { ReceiveDto } from '../../dto/receive.dto';
 import { ReceiveService } from './receive.service';
 
 @Controller('api/receive')
