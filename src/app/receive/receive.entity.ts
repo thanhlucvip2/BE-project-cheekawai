@@ -20,6 +20,9 @@ export class ReceiveEntity {
   @CreateDateColumn()
   created: Date;
 
+  @Column({ type: 'varchar', nullable: false })
+  received_code: string;
+
   @Column({ type: 'int', nullable: false })
   quantity: number;
 

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from 'src/shared/auth.guard';
 import { ValidationPipe } from 'src/shared/validation.pipe';
+import { ReceiveHistoryService } from './receive-history/receive-history.service';
 import { ReceiveDto } from './receive.dto';
 import { ReceiveService } from './receive.service';
 
