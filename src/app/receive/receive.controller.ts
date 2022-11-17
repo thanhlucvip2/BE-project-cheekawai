@@ -7,6 +7,7 @@ import {
   Body,
   UsePipes,
   Query,
+  Put,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/@systems/auth.guard';
 import { ValidationPipe } from 'src/@systems/validation.pipe';
@@ -34,5 +35,12 @@ export class ReceiveController {
   @UseGuards(new AuthGuard()) // check token
   async createReceive(@Body() body: ReceiveDto) {
     return this.receiveService.createReceive(body);
+  }
+
+  @Put(':id')
+  @UsePipes(new ValidationPipe())
+  @UseGuards(new AuthGuard()) // check token
+  async updateReceive(@Body() body: ReceiveDto, @Param('id') id: string) {
+    return this.receiveService.updateReceive(body, id);
   }
 }

@@ -29,6 +29,7 @@ export class ReceiveHistoryService {
       .leftJoinAndSelect('receive_history.supplier', 'supplier') // relation ship
       .andWhere('receive_history.created >= :sqlFromDate', { sqlFromDate })
       .andWhere('receive_history.created <= :sqlToDate', { sqlToDate })
+      .orderBy({ 'receive_history.created': 'DESC' })
       .limit(pageSize)
       .offset(pageIndex);
 

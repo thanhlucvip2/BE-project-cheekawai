@@ -8,6 +8,7 @@ import { ReceiveDto } from '../../dto/receive.dto';
 import { ReceiveEntity } from '../../@entity/receive.entity';
 import { adddate, convertDateTimeToDateString } from 'src/@helpers/sql.helper';
 import { PaginationDto } from 'src/dto/pagination.dto';
+import { StatusReceive } from 'src/common/enum/status';
 
 @Injectable()
 export class ReceiveService {
@@ -35,11 +36,12 @@ export class ReceiveService {
     const sqlToDate = convertDateTimeToDateString(adddate(toDate, 1)); // tặng thêm 1 ngày cho date hiện tại
 
     const queryBuilder = await this.emBi
-      .createQueryBuilder(ReceiveHistoryEntity, 'receive_history')
-      .leftJoinAndSelect('receive_history.product_type', 'product_type') // relation ship
-      .leftJoinAndSelect('receive_history.supplier', 'supplier') // relation ship
-      .andWhere('receive_history.created >= :sqlFromDate', { sqlFromDate })
-      .andWhere('receive_history.created <= :sqlToDate', { sqlToDate })
+      .createQueryBuilder(ReceiveEntity, 'receive')
+      .leftJoinAndSelect('receive.product_type', 'product_type') // relation ship
+      .leftJoinAndSelect('receive.supplier', 'supplier') // relation ship
+      .andWhere('receive.created >= :sqlFromDate', { sqlFromDate })
+      .andWhere('receive.created <= :sqlToDate', { sqlToDate })
+      .orderBy({ 'receive.created': 'DESC' })
       .limit(pageSize)
       .offset(pageIndex);
 
@@ -75,17 +77,27 @@ export class ReceiveService {
     const supplier = await this.supplierRepository.findOne({
       where: { supplier_code: body.supplier_code },
     });
-
     if (!supplier) {
       throw new HttpException(
         'Mã chủ hàng không tồn tại trong hệ thống',
         HttpStatus.BAD_REQUEST,
       );
     }
-
     if (!product_type) {
       throw new HttpException(
         'Mã hàng không tồn tại trong hệ thống',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const received_code = await this.receiveRepository.findOne({
+      where: { received_code: body.received_code },
+    });
+
+    if (received_code) {
+      // nếu mã đơn đã tồn tại thì chỉ update lại đơn
+      throw new HttpException(
+        'Mã đơn hàng đã tồn tại trong hệ thống',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -95,11 +107,61 @@ export class ReceiveService {
       product_type,
       supplier,
     });
+
+    // nếu số lượng xác nhận bằng số lượng nhập thì chuyển đơn thành trạng thái thành công
+    if (receive.quantity_received === receive.quantity) {
+      receive.status = StatusReceive.RECEIVE_SUCCESS;
+    }
     this.createReceiveHistory(receive);
     return await this.receiveRepository.save(receive);
   }
 
-  private createReceiveHistory(receive: ReceiveDto) {
-    this.receiveHistoryRepository.save(receive);
+  async updateReceive(body: ReceiveDto, id: string) {
+    const receive = await this.receiveRepository.findOne({
+      where: {
+        sku: body.sku,
+        supplier_code: body.supplier_code,
+        id,
+        received_code: body.received_code,
+      },
+    });
+
+    if (!receive) {
+      // nếu mã đơn đã tồn tại thì chỉ update lại đơn
+      throw new HttpException(
+        'Đơn hàng không tồn tại trong hệ thống',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (receive.status === StatusReceive.RECEIVE_SUCCESS) {
+      throw new HttpException(
+        'Đơn dã hoàn thành, bạn không được phép cập nhật lại',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const newReceive = {
+      ...body,
+      quantity_received: +body.quantity_received,
+      quantity: +body.quantity,
+      transport_fee: +body.transport_fee,
+    };
+
+    if (newReceive.quantity_received > newReceive.quantity) {
+      throw new HttpException(
+        'Không được nhập quá số lượng của đơn hàng',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (newReceive.quantity_received === newReceive.quantity) {
+      newReceive.status = StatusReceive.RECEIVE_SUCCESS;
+    }
+
+    this.createReceiveHistory(newReceive);
+    await this.receiveRepository.update({ id }, newReceive);
+    return await this.receiveRepository.findOne({ where: { id } });
+  }
+
+  private createReceiveHistory(body: ReceiveDto) {
+    this.receiveHistoryRepository.save(body);
   }
 }
